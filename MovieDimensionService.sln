@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "MovieDimensionService", "MovieDimensionService\MovieDimensionService.pyproj", "{F5DFEB4B-6A70-4E8D-AE20-5DBD6B3B4B4A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5DFEB4B-6A70-4E8D-AE20-5DBD6B3B4B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5DFEB4B-6A70-4E8D-AE20-5DBD6B3B4B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {662B911B-3989-46C6-9680-67927320FF14}
+	EndGlobalSection
+EndGlobal
