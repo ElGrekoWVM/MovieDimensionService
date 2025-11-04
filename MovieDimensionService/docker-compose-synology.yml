@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  moviedimension:
+    image: elgrekowvm/moviedimension:latest
+    container_name: moviedimension
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Keep VIDEO_ROOT in sync with the container mount below
+      - VIDEO_ROOT=/video
+      # Set your Plex settings (or pass them in API requests)
+      - PLEX_BASE_URL=http://plex.local:32400
+      - PLEX_TOKEN=YOUR_PLEX_TOKEN_HERE
+      # Optional tuning (read by app if you expose them into app.py)
+      - SAMPLE_FRAMES=8
+      - BLACK_THRESH=16
+    volumes:
+      # Map your video library into the container (read-only)
+      - /volume1/video:/video:ro
+    # Optional: assign resource limits if desired for Synology Container Manager
+    # deploy:           # not all Synology versions support deploy keys in UI
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 1024M

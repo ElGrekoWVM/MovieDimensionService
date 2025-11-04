@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".dockerignore" />
+    <Content Include="docker-compose-synology.yml" />
     <Content Include="docker-compose.yml" />
     <Content Include="Dockerfile" />
     <Content Include="requirements.txt" />
