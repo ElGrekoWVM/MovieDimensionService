@@ -1,0 +1,6 @@
+movie_dimension:
+  module: appdaemon_movie_dimension
+  class: MovieDimension
+  # optional config keys
+  # target_entity: sensor.movie_aspect_ratio
+  # any other configuration accessible via self.args in the app
