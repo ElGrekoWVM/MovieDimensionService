@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  moviedim:
+    build: .
+    container_name: moviedimension
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /volume1/video:/video:ro
+    environment:
+      - VIDEO_ROOT=/video
+      - PLEX_BASE_URL=http://plex.local:32400
+      - PLEX_TOKEN=YOUR_TOKEN_HERE

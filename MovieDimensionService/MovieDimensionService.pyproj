@@ -23,7 +23,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="appdaemon_movie_dimension.py" />
+    <Compile Include="app.py" />
+    <Compile Include="movie_dimension.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
@@ -37,7 +38,10 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config_appdaemon_app_movie_dimension_apps.yaml" />
+    <Content Include=".dockerignore" />
+    <Content Include="docker-compose.yml" />
+    <Content Include="Dockerfile" />
+    <Content Include="requirements.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
