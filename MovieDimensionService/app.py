@@ -5,7 +5,7 @@ from movie_dimension import calculate_visible_height, get_file_path_from_plex
 
 app = Flask(__name__)
 
-# In Synology the shared folder is mounted at /video inside the container 
+# In Synology the shared folder is mounted at /video inside the container
 VIDEO_ROOT = os.environ.get('VIDEO_ROOT', '/video')
 
 # entry point for calculating visible height of a video file
