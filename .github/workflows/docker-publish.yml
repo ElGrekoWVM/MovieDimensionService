@@ -3,6 +3,8 @@ name: Build and push Docker image to Docker Hub
 on:
   push:
     branches: [ main ]
+    # Also build on annotated tag pushes
+    tags: ['v*.*.*']
 
 jobs:
   build-and-push:
@@ -11,12 +13,34 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed to compute git describe
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Determine image tags
+        id: tag
+        run: |
+          # prefer annotated tag if present
+          if [ -n "$GITHUB_REF" ] && [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${TAG_NAME},${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest" >> $GITHUB_OUTPUT
+          else
+            # Use semantic-ish tag from git describe or short sha
+            if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+              GIT_DESC=$(git describe --tags --always --dirty)
+            else
+              GIT_DESC=$(git rev-parse --short HEAD)
+            fi
+            SAFE_TAG=$(echo "$GIT_DESC" | tr '/' '-')
+            echo "tag=${SAFE_TAG}" >> $GITHUB_OUTPUT
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${SAFE_TAG},${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest,${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${{ github.sha }}" >> $GITHUB_OUTPUT
+          fi
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -32,8 +56,6 @@ jobs:
           file: ./MovieDimensionService/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${{ github.sha }}
+          tags: ${{ steps.tag.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
