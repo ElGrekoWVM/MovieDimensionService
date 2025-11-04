@@ -8,7 +8,7 @@ app = Flask(__name__)
 # In Synology the shared folder is mounted at /video inside the container 
 VIDEO_ROOT = os.environ.get('VIDEO_ROOT', '/video')
 
-# entry point for calculating visible height
+# entry point for calculating visible height of a video file
 @app.route('/calculate', methods=['POST'])
 def calculate():
     data = request.json or {}
