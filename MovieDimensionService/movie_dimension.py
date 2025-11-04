@@ -34,7 +34,6 @@ logger.setLevel(logging.INFO)
 
 
 def _log(log_func, msg, level="ERROR"):
-    """Central logging helper: use provided log_func or module logger (stdout)."""
     if log_func:
         try:
             log_func(msg, level=level)
