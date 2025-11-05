@@ -59,6 +59,16 @@ def calculate():
         plex_path = get_file_path_from_plex(rating_key, plex_base_url, plex_token)
         if not plex_path:
             return jsonify({'error': 'could not determine file path from plex'}), 500
+
+        # Special-case: if Plex reports a trailer location on C:\Trailer, return default aspect
+        try:
+            if isinstance(plex_path, str):
+                pnorm = plex_path.strip().lower()
+                if pnorm.startswith('c:\\trailer') or pnorm.startswith('c:/trailer') or pnorm == 'c:\\trailer' or pnorm == 'c:/trailer':
+                    return jsonify({'aspect_ratio': 1.76, 'valid': True})
+        except Exception:
+            pass
+
         # Map Plex path to container path
         file_path = map_plex_path_to_container(plex_path)
 
