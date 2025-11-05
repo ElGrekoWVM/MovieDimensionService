@@ -31,7 +31,7 @@ jobs:
             echo "tag=${TAG_NAME}" >> $GITHUB_OUTPUT
             echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${TAG_NAME},${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest" >> $GITHUB_OUTPUT
           else
-            # Use semantic-ish tag from git describe or short sha
+            # Use semantic-ish tag from git describe or short sha (as fallback version)
             if git describe --tags --abbrev=0 >/dev/null 2>&1; then
               GIT_DESC=$(git describe --tags --always --dirty)
             else
@@ -39,7 +39,7 @@ jobs:
             fi
             SAFE_TAG=$(echo "$GIT_DESC" | tr '/' '-')
             echo "tag=${SAFE_TAG}" >> $GITHUB_OUTPUT
-            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${SAFE_TAG},${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest,${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${{ github.sha }}" >> $GITHUB_OUTPUT
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:${SAFE_TAG},${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:latest" >> $GITHUB_OUTPUT
           fi
 
       - name: Login to Docker Hub
@@ -49,37 +49,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push amd64 image (arch-specific tags)
-        uses: docker/build-push-action@v4
-        with:
-          context: ./MovieDimensionService
-          file: ./MovieDimensionService/Dockerfile
-          platforms: linux/amd64
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:amd64-${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:amd64-latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            GIT_SHA=${{ github.sha }}
-
-      - name: Build and push arm64 image (arch-specific tags)
-        uses: docker/build-push-action@v4
-        with:
-          context: ./MovieDimensionService
-          file: ./MovieDimensionService/Dockerfile
-          platforms: linux/arm64
-          push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:arm64-${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/moviedimension:arm64-latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            GIT_SHA=${{ github.sha }}
-
-      - name: Build and push multi-arch manifest (latest + tag)
+      - name: Build and push multi-arch image (version + latest)
         uses: docker/build-push-action@v4
         with:
           context: ./MovieDimensionService
